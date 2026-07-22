@@ -1,36 +1,22 @@
-from typing import List
+from datetime import datetime, timezone
 
-from pydantic import BaseModel, EmailStr, Field
+from sqlalchemy import Column, DateTime, Integer, String
 
-
-class StudentBase(BaseModel):
-    name: str = Field(..., min_length=2, max_length=100, json_schema_extra={"example": "Alex Johnson"})
-    email: EmailStr = Field(..., json_schema_extra={"example": "alex@example.com"})
-    age: int = Field(..., ge=5, le=100, json_schema_extra={"example": 21})
-    course: str = Field(..., min_length=2, max_length=100, json_schema_extra={"example": "Computer Science"})
+from database import Base
 
 
-class StudentCreate(StudentBase):
-    pass
+class Student(Base):
+    """SQLAlchemy model representing a student in the database."""
 
+    __tablename__ = "students"
 
-class Student(StudentBase):
-    id: int = Field(..., json_schema_extra={"example": 1})
-
-
-students: List[Student] = [
-    Student(
-        id=1,
-        name="Ayesha Khan",
-        email="ayesha.khan@example.com",
-        age=20,
-        course="Data Science",
-    ),
-    Student(
-        id=2,
-        name="Ali Raza",
-        email="ali.raza@example.com",
-        age=22,
-        course="Software Engineering",
-    ),
-]
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    age = Column(Integer, nullable=False)
+    course = Column(String, nullable=False)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )

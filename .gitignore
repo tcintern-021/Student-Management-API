@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 .venv/
 __pycache__/
 *.pyc
 .env
-=======
-.venv/
-__pycache__/
-*.pyc
-.env
->>>>>>> 532c05f17a23c923e9bc09e79eac1b3761faa115
+*.db
