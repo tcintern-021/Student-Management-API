@@ -4,6 +4,40 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
+class Token(BaseModel):
+    """Schema for JWT token response."""
+
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    """Schema for data extracted from JWT token."""
+
+    email: Optional[str] = None
+
+
+class UserBase(BaseModel):
+    """Base schema for User."""
+
+    email: EmailStr = Field(..., json_schema_extra={"example": "admin@example.com"})
+
+
+class UserCreate(UserBase):
+    """Schema for user registration."""
+
+    password: str = Field(..., min_length=6, json_schema_extra={"example": "secret123"})
+
+
+class UserResponse(UserBase):
+    """Schema for returning user data."""
+
+    id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class StudentBase(BaseModel):
     """Base schema with common attributes."""
 
@@ -29,6 +63,7 @@ class StudentResponse(StudentBase):
     """Schema for returning student data with id and created_at timestamp."""
 
     id: int
+    user_id: int
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

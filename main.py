@@ -3,6 +3,7 @@ from fastapi import FastAPI
 import models
 from database import engine
 from student import router as student_router
+from user import router as user_router
 
 # Create database tables automatically on startup
 models.Base.metadata.create_all(bind=engine)
@@ -13,6 +14,7 @@ app = FastAPI(
     version="2.0.0",
 )
 
+app.include_router(user_router)
 app.include_router(student_router)
 
 
